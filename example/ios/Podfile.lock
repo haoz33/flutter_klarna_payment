@@ -1,21 +1,36 @@
 PODS:
   - Flutter (1.0.0)
+  - flutter_klarna_payment (0.0.1):
+    - Flutter
+    - KlarnaMobileSDK (~> 2.4.1)
   - integration_test (0.0.1):
     - Flutter
+  - KlarnaMobileSDK (2.4.2):
+    - KlarnaMobileSDK/full (= 2.4.2)
+  - KlarnaMobileSDK/full (2.4.2)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_klarna_payment (from `.symlinks/plugins/flutter_klarna_payment/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+
+SPEC REPOS:
+  trunk:
+    - KlarnaMobileSDK
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_klarna_payment:
+    :path: ".symlinks/plugins/flutter_klarna_payment/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_klarna_payment: bcabf729b49ad834a129b2de57a4f05e813125a4
   integration_test: 13825b8a9334a850581300559b8839134b124670
+  KlarnaMobileSDK: 2ca52a74a9ebbe3c57325a9829e7008583c32ecf
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 

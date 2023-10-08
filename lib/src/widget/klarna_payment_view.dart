@@ -14,7 +14,12 @@ class KlarnaPaymentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
-      return Text('ABC');
+      return UiKitView(
+        viewType: _viewType,
+        layoutDirection: TextDirection.ltr,
+        creationParams: request.toCreationParams(),
+        creationParamsCodec: const StandardMessageCodec(),
+      );
     }
 
     return AndroidView(

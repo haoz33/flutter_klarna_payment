@@ -22,3 +22,5 @@ flutter:
       android:
         package: com.flutter_klarna_payment.flutter_klarna_payment
         pluginClass: FlutterKlarnaPaymentPlugin
+      ios:
+        pluginClass: FlutterKlarnaPaymentPlugin
