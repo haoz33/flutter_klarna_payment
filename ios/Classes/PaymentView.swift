@@ -13,9 +13,11 @@ import KlarnaMobileSDK
 
 class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
     private var messenger: FlutterBinaryMessenger
-
-    init(messenger: FlutterBinaryMessenger) {
+    private var streamHandler: PaymentStreamHandler
+    
+    init(messenger: FlutterBinaryMessenger,streamHandler:PaymentStreamHandler) {
         self.messenger = messenger
+        self.streamHandler=streamHandler
         super.init()
     }
 
@@ -28,7 +30,9 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
             frame: frame,
             viewIdentifier: viewId,
             arguments: args,
-            binaryMessenger: messenger)
+            binaryMessenger: messenger,
+            streamHandler:  streamHandler
+        )
     }
 
     /// Implementing this method is only necessary when the `arguments` in `createWithFrame` is not `nil`.
@@ -37,18 +41,22 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
     }
 }
 
-class FLNativeView: NSObject, FlutterPlatformView {
+class FLNativeView: NSObject, FlutterPlatformView,KlarnaPaymentEventListener {
     private var _view: UIView
     @IBOutlet weak var heightConstr: NSLayoutConstraint!
-	
+    private var _paymentView: KlarnaPaymentView?
+    private var streamHandler: PaymentStreamHandler
+
     
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
         arguments args: Any?,
-        binaryMessenger messenger: FlutterBinaryMessenger?
+        binaryMessenger messenger: FlutterBinaryMessenger?,
+        streamHandler:PaymentStreamHandler
     ) {
-        
+        self.streamHandler=streamHandler
+
         _view = UIView()
         super.init()
         // iOS views can be created here
@@ -64,28 +72,89 @@ class FLNativeView: NSObject, FlutterPlatformView {
 
 
     func createNativeView(view _view: UIView, request:KlarnaPayRequest){
-        
-        let streamHandler = PaymentStreamHandler()
-        
-        let callback = PaymentViewCallback(streamHandler: streamHandler)
-        
-        let paymentView = KlarnaPaymentView(category: "klarna", eventListener: callback)
-        
-        paymentView.initialize(clientToken: request.clientToken, returnUrl:URL.init(string: request.returnUrl)!)
-        
-        paymentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.heightConstr = paymentView.heightAnchor.constraint(equalToConstant: 0)
+        _paymentView = KlarnaPaymentView(category: "pay_over_time", eventListener: self)
+        // Create a height constraint that we'll update as its height changes.
+        _paymentView!.initialize(clientToken: request.clientToken, returnUrl:URL.init(string: request.returnUrl)!)
+
+        _paymentView!.translatesAutoresizingMaskIntoConstraints = false
+        self.heightConstr = _paymentView!.heightAnchor.constraint(equalToConstant: 0)
         heightConstr.isActive = true
-        paymentView.backgroundColor = UIColor.lightGray
-        _view.addSubview(paymentView)
+        _paymentView!.backgroundColor = UIColor.lightGray
+        _view.addSubview(_paymentView!)
         _view.addConstraint(heightConstr);
         
-        
-        callback.setHeightConstr(heightConstr: self.heightConstr)
-
+        _paymentView!.translatesAutoresizingMaskIntoConstraints = false
+        let attributes: [NSLayoutConstraint.Attribute] = [.top, .bottom, .right, .left]
+        NSLayoutConstraint.activate(attributes.map {
+            NSLayoutConstraint(item: _paymentView!, attribute: $0, relatedBy: .equal, toItem: _paymentView!.superview, attribute: $0, multiplier: 1, constant: 0)
+        })
+//        let streamHandler = PaymentStreamHandler()
+//
+//        let callback = PaymentViewCallback(streamHandler: streamHandler)
+//
+//        let paymentView = KlarnaPaymentView(category: "klarna", eventListener: callback)
+//
+//        paymentView.initialize(clientToken: request.clientToken, returnUrl:URL.init(string: request.returnUrl)!)
+//
+//        paymentView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        self.heightConstr = paymentView.heightAnchor.constraint(equalToConstant: 0)
+//        heightConstr.isActive = true
+//        paymentView.backgroundColor = UIColor.lightGray
+//        _view.addSubview(paymentView)
+//        _view.addConstraint(heightConstr);
+//
+//        paymentView.translatesAutoresizingMaskIntoConstraints = false
+//        let attributes: [NSLayoutConstraint.Attribute] = [.top, .bottom, .right, .left]
+//        NSLayoutConstraint.activate(attributes.map {
+//            NSLayoutConstraint(item: paymentView, attribute: $0, relatedBy: .equal, toItem: paymentView.superview, attribute: $0, multiplier: 1, constant: 0)
+//        })
+//
+//        callback.setHeightConstr(heightConstr: self.heightConstr)
+//
 
     
+    }
+    
+    
+    
+    func klarnaInitialized(paymentView: KlarnaMobileSDK.KlarnaPaymentView) {
+        streamHandler.sendMessage(state: "initialized", message: nil);
+        paymentView.load(jsonData: nil)
+        streamHandler.setPaymentView(paymentView)
+    }
+    
+    func klarnaLoaded(paymentView: KlarnaMobileSDK.KlarnaPaymentView) {
+        streamHandler.sendMessage(state:"loaded", message: nil as String?);
+    }
+    
+    func klarnaLoadedPaymentReview(paymentView: KlarnaMobileSDK.KlarnaPaymentView) {
+        streamHandler.sendMessage(state:"paymentReview", message: nil);
+    }
+    
+    func klarnaAuthorized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, approved: Bool, authToken: String?, finalizeRequired: Bool) {
+        if (authToken != nil) {
+            streamHandler.sendMessage(state:"authorized", message: authToken);
+            
+        }
+    }
+    
+    func klarnaReauthorized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, approved: Bool, authToken: String?) {
+        
+        streamHandler.sendMessage(state:"reauthorized", message: nil);
+    }
+    
+    func klarnaFinalized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, approved: Bool, authToken: String?) {
+        streamHandler.sendMessage(state:"finalized", message: nil);
+    }
+    
+    func klarnaResized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, to newHeight: CGFloat) {
+        self.heightConstr.constant = newHeight
+    }
+    
+    func klarnaFailed(inPaymentView paymentView: KlarnaMobileSDK.KlarnaPaymentView, withError error: KlarnaMobileSDK.KlarnaPaymentError) {
+        streamHandler.sendMessage(state:"failed", message: error.message);
+
     }
 }
 
