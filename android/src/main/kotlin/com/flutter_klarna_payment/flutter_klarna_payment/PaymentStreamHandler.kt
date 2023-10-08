@@ -12,6 +12,7 @@ class PaymentStreamHandler() : StreamHandler {
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         sink = events
+        sendMessage(KlarnaPaymentState.INITIAL.toCamelCase(),null)
     }
 
     override fun onCancel(arguments: Any?) {

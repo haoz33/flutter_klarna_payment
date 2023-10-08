@@ -17,3 +17,22 @@ public fun convertToKlarnaPayRequest(map: Map<String?, Any?>?): KlarnaPayRequest
     return null // Return null if either clientToken or returnUrl is missing or not of the expected type.
 }
 
+enum class KlarnaPaymentState {
+    INITIAL,
+    INITIALIZED,
+    LOADED,
+    AUTHORIZED,
+    FINALIZED,
+    REAUTHORIZED,
+    ERROR_OCCURRED,
+    LOAD_PAYMENT_REVIEW,
+    UNKNOWN;
+    fun toCamelCase(): String {
+        val words = name.lowercase().split('_')
+        val camelCaseWords = words.mapIndexed { index, word ->
+            if (index == 0) word else word.replaceFirstChar{it.uppercase()}
+        }
+        return camelCaseWords.joinToString("")
+    }
+
+}

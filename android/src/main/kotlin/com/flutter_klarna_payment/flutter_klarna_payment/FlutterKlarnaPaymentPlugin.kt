@@ -20,8 +20,11 @@ class FlutterKlarnaPaymentPlugin: FlutterPlugin, MethodCallHandler {
 
     val paymentCallback = PaymentViewCallback(streamHandler)
 
+
+
     val eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "flutter_klarna_payment_event")
     eventChannel.setStreamHandler(streamHandler)
+
     flutterPluginBinding
       .platformViewRegistry
       .registerViewFactory("plugin.flutter_klarna_payment/view", PaymentViewFactory(messenger = flutterPluginBinding.binaryMessenger,paymentCallback))

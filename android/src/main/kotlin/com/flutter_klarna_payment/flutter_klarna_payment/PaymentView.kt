@@ -11,7 +11,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 
-class PaymentView(context: Context, messenger: BinaryMessenger, id: Int, creationParams: Map<String?, Any?>?,private  val paymentViewCallback: KlarnaPaymentViewCallback): PlatformView {
+class PaymentView(context: Context, messenger: BinaryMessenger, id: Int, creationParams: Map<String?, Any?>?,private val paymentViewCallback: KlarnaPaymentViewCallback): PlatformView {
 
     private  val context: Context =context
     private val paymentView: KlarnaPaymentView
