@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_klarna_payment/flutter_klarna_payment.dart';
 
 void main() {
@@ -16,42 +14,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _flutterKlarnaPaymentPlugin = FlutterKlarnaPayment();
-  EventChannel eventChannel =
-      const EventChannel("flutter_klarna_payment_event");
-
+  final controller = KlarnaPaymentController();
+  String text = '';
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-    eventChannel.receiveBroadcastStream().listen(
-      (event) {
-        print(event);
-      },
-    );
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    // try {
-    //   platformVersion =
-    //       await _flutterKlarnaPaymentPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    // } on PlatformException {
-    //   platformVersion = 'Failed to get platform version.';
-    // }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    // setState(() {
-    //   _platformVersion = platformVersion;
-    // });
+    controller.stateStream.listen((event) {
+      setState(() {
+        text = event.state;
+      });
+    });
   }
 
   @override
@@ -65,15 +37,18 @@ class _MyAppState extends State<MyApp> {
             children: [
               Expanded(
                 child: KlarnaPaymentView(
-                    request: KlarnaPaymentRequest(
-                        clientToken: token,
-                        returnUrl: 'https://example.flutter_klarna_payment')),
+                  controller: controller,
+                  request: KlarnaPaymentRequest(
+                    clientToken: token,
+                    returnUrl: 'https://example.flutter_klarna_payment',
+                  ),
+                ),
               ),
               ElevatedButton(
                   onPressed: () {
-                    _flutterKlarnaPaymentPlugin.pay();
+                    controller.pay();
                   },
-                  child: Text('Pay'))
+                  child: Text('Pay ${text}'))
             ],
           )),
     );

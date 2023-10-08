@@ -8,6 +8,7 @@
 import 'src/flutter_klarna_payment_platform_interface.dart';
 export './src/utils/klarna_payment_request.dart';
 export './src/widget/klarna_payment_view.dart';
+export 'src/controller/klarna_payment_controller.dart';
 
 class FlutterKlarnaPayment {
   Future<void> pay() {
