@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_klarna_payment/flutter_klarna_payment.dart';
 import 'package:flutter_klarna_payment/src/controller/klarna_payment_controller_state.dart';
+import 'package:flutter_klarna_payment/src/utils/klarna_state.dart';
 
 class KlarnaPaymentController {
   KlarnaPaymentController() {
@@ -32,8 +33,8 @@ class KlarnaPaymentController {
       _stateController.stream;
 
   void _updateState(String state, String? message) {
-    final newState =
-        KlarnaPaymentControllerState(state: state, message: message);
+    final newState = KlarnaPaymentControllerState(
+        state: klarnaStateFromString(state), message: message);
     _stateController.sink.add(newState);
   }
 }

@@ -21,3 +21,16 @@ func convertToKlarnaPayRequest(input: Any?) -> KlarnaPayRequest? {
     
     return KlarnaPayRequest(clientToken: clientToken, returnUrl: returnUrl)
 }
+
+
+enum PaymentState: String {
+    case initial
+    case initialized
+    case loaded
+    case authorized
+    case finalized
+    case reauthorized
+    case errorOccurred
+    case loadPaymentReview
+    case unknown
+}

@@ -72,6 +72,8 @@ class FLNativeView: NSObject, FlutterPlatformView,KlarnaPaymentEventListener {
 
 
     func createNativeView(view _view: UIView, request:KlarnaPayRequest){
+        streamHandler.sendMessage(state: PaymentState.initial.rawValue, message: nil);
+
         _paymentView = KlarnaPaymentView(category: "pay_over_time", eventListener: self)
         // Create a height constraint that we'll update as its height changes.
         _paymentView!.initialize(clientToken: request.clientToken, returnUrl:URL.init(string: request.returnUrl)!)
@@ -94,33 +96,33 @@ class FLNativeView: NSObject, FlutterPlatformView,KlarnaPaymentEventListener {
     
     
     func klarnaInitialized(paymentView: KlarnaMobileSDK.KlarnaPaymentView) {
-        streamHandler.sendMessage(state: "initialized", message: nil);
+        streamHandler.sendMessage(state: PaymentState.initialized.rawValue, message: nil);
         paymentView.load(jsonData: nil)
         streamHandler.setPaymentView(paymentView)
     }
     
     func klarnaLoaded(paymentView: KlarnaMobileSDK.KlarnaPaymentView) {
-        streamHandler.sendMessage(state:"loaded", message: nil as String?);
+        streamHandler.sendMessage(state:PaymentState.loaded.rawValue, message: nil as String?);
     }
     
     func klarnaLoadedPaymentReview(paymentView: KlarnaMobileSDK.KlarnaPaymentView) {
-        streamHandler.sendMessage(state:"paymentReview", message: nil);
+        streamHandler.sendMessage(state:PaymentState.loadPaymentReview.rawValue, message: nil);
     }
     
     func klarnaAuthorized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, approved: Bool, authToken: String?, finalizeRequired: Bool) {
         if (authToken != nil) {
-            streamHandler.sendMessage(state:"authorized", message: authToken);
+            streamHandler.sendMessage(state:PaymentState.authorized.rawValue, message: authToken);
             
         }
     }
     
     func klarnaReauthorized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, approved: Bool, authToken: String?) {
         
-        streamHandler.sendMessage(state:"reauthorized", message: nil);
+        streamHandler.sendMessage(state:PaymentState.reauthorized.rawValue, message: nil);
     }
     
     func klarnaFinalized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, approved: Bool, authToken: String?) {
-        streamHandler.sendMessage(state:"finalized", message: nil);
+        streamHandler.sendMessage(state:PaymentState.finalized.rawValue, message: nil);
     }
     
     func klarnaResized(paymentView: KlarnaMobileSDK.KlarnaPaymentView, to newHeight: CGFloat) {
@@ -128,7 +130,7 @@ class FLNativeView: NSObject, FlutterPlatformView,KlarnaPaymentEventListener {
     }
     
     func klarnaFailed(inPaymentView paymentView: KlarnaMobileSDK.KlarnaPaymentView, withError error: KlarnaMobileSDK.KlarnaPaymentError) {
-        streamHandler.sendMessage(state:"failed", message: error.message);
+        streamHandler.sendMessage(state:PaymentState.errorOccurred.rawValue, message: error.message);
 
     }
 }

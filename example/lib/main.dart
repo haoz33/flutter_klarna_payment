@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     controller.stateStream.listen((event) {
       setState(() {
-        text = event.state;
+        text = event.state.name;
       });
     });
   }
