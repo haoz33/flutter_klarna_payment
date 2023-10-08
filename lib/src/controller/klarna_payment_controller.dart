@@ -29,12 +29,22 @@ class KlarnaPaymentController {
 
   final _stateController = StreamController<KlarnaPaymentControllerState>();
 
+  KlarnaPaymentControllerState _currentState =
+      const KlarnaPaymentControllerState(state: KlarnaState.unknown);
+
+  KlarnaPaymentControllerState get currentState => _currentState;
+
   Stream<KlarnaPaymentControllerState> get stateStream =>
       _stateController.stream;
+
+  set currentState(KlarnaPaymentControllerState state) {
+    _currentState = state;
+  }
 
   void _updateState(String state, String? message) {
     final newState = KlarnaPaymentControllerState(
         state: klarnaStateFromString(state), message: message);
     _stateController.sink.add(newState);
+    currentState = newState;
   }
 }
