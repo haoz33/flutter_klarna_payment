@@ -88,31 +88,6 @@ class FLNativeView: NSObject, FlutterPlatformView,KlarnaPaymentEventListener {
         NSLayoutConstraint.activate(attributes.map {
             NSLayoutConstraint(item: _paymentView!, attribute: $0, relatedBy: .equal, toItem: _paymentView!.superview, attribute: $0, multiplier: 1, constant: 0)
         })
-//        let streamHandler = PaymentStreamHandler()
-//
-//        let callback = PaymentViewCallback(streamHandler: streamHandler)
-//
-//        let paymentView = KlarnaPaymentView(category: "klarna", eventListener: callback)
-//
-//        paymentView.initialize(clientToken: request.clientToken, returnUrl:URL.init(string: request.returnUrl)!)
-//
-//        paymentView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        self.heightConstr = paymentView.heightAnchor.constraint(equalToConstant: 0)
-//        heightConstr.isActive = true
-//        paymentView.backgroundColor = UIColor.lightGray
-//        _view.addSubview(paymentView)
-//        _view.addConstraint(heightConstr);
-//
-//        paymentView.translatesAutoresizingMaskIntoConstraints = false
-//        let attributes: [NSLayoutConstraint.Attribute] = [.top, .bottom, .right, .left]
-//        NSLayoutConstraint.activate(attributes.map {
-//            NSLayoutConstraint(item: paymentView, attribute: $0, relatedBy: .equal, toItem: paymentView.superview, attribute: $0, multiplier: 1, constant: 0)
-//        })
-//
-//        callback.setHeightConstr(heightConstr: self.heightConstr)
-//
-
     
     }
     
