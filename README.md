@@ -1,18 +1,137 @@
-# flutter_klarna_payment
+# Flutter Klarna Payment Plugin
 
-A new Flutter plugin project.
+The Flutter Klarna Payment Plugin is a Flutter package that enables you to integrate Klarna Payments into your Flutter application. 
 
-## Getting Started
+This plugin provides a simple and easy-to-use interface for integrating Klarna Payments into your Flutter app, allowing you to offer a seamless and secure payment experience to your users.
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To use this plugin, follow these steps:
 
-The plugin project was generated without specifying the `--platforms` flag, no platforms are currently supported.
-To add platforms, run `flutter create -t plugin --platforms <platforms> .` in this directory.
-You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.
+1. Add the following dependency to your `pubspec.yaml` file:
+
+   ```yaml
+   dependencies:
+     flutter_klarna_payment: ^0.1.0
+   ```
+
+2. Run `flutter pub get` to install the dependency.
+
+
+## Android Setup 
+
+1. Add the Klarna Mobile SDK repository in the `android/build.gradle` build.gradle file.
+
+```
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://x.klarnacdn.net/mobile-sdk/'
+        }
+    }
+}
+```
+
+2. Add return url 
+
+replace `https` and `com.example.flutter_klarna_payment` 
+
+```xml
+<application...>
+    <activity...>
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+        
+            <data android:scheme="https" />
+            <data android:host="com.example.flutter_klarna_payment" />
+        </intent-filter>
+    </activity>
+</application>
+```
+
+## iOS setup
+
+1. Add return url
+
+see https://docs.klarna.com/mobile-sdk/ios/get-started/#configure-your-app-return-url for more detail
+
+## Usage
+
+Here's a basic example of how to use the Flutter Klarna Payment Plugin in your Flutter app:
+
+```dart
+import 'package:flutter/material.dart';
+
+import 'package:flutter_klarna_payment/flutter_klarna_payment.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final controller = KlarnaPaymentController();
+  String text = '';
+  @override
+  void initState() {
+    super.initState();
+    controller.stateStream.listen((event) {
+      setState(() {
+        text = event.state.name;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: KlarnaPaymentView(
+                  controller: controller,
+                  request: KlarnaPaymentRequest(
+                    clientToken: token,
+                    returnUrl: 'https://com.example.flutter_klarna_payment',
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    controller.pay();
+                  },
+                  child: Text('Pay ${text}'))
+            ],
+          )),
+    );
+  }
+}
+
+const token =
+    'XXX';
+
+```
+
+In this example, replace `'token'`, and `'returnUrl'` with your Klarna client token and return url. 
+
+## Example
+
+See completed example within the `example` folder
+
+## License
+
+This plugin is released under the MIT License. See the [LICENSE](LICENSE) file for details.
