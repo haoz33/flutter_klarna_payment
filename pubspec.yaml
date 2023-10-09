@@ -1,6 +1,6 @@
 name: flutter_klarna_payment
-description: A new Flutter plugin project.
-version: 0.0.1
+description: A flutter plugin enable you to integrate Klarna Payment.
+version: 0.1.0
 
 environment:
   sdk: '>=2.19.1 <4.0.0'
@@ -15,7 +15,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  pigeon: ^12.0.0
 
 flutter:
   plugin:
