@@ -1,6 +1,10 @@
 name: flutter_klarna_payment
 description: A flutter plugin enable you to integrate Klarna Payment.
-version: 0.1.0
+version: 0.1.1
+repository: https://github.com/haoz33/flutter_klarna_payment
+platforms:
+  android:
+  ios:
 
 environment:
   sdk: '>=2.19.1 <4.0.0'
