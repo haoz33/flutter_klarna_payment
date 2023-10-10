@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     controller.pay();
                   },
-                  child: Text('Pay ${text}'))
+                  child: Text('Pay $text'))
             ],
           )),
     );

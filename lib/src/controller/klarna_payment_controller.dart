@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_klarna_payment/flutter_klarna_payment.dart';
 import 'package:flutter_klarna_payment/src/controller/klarna_payment_controller_state.dart';
-import 'package:flutter_klarna_payment/src/utils/klarna_state.dart';
 
 class KlarnaPaymentController {
   KlarnaPaymentController() {
@@ -32,6 +31,7 @@ class KlarnaPaymentController {
   KlarnaPaymentControllerState _currentState =
       const KlarnaPaymentControllerState(state: KlarnaState.unknown);
 
+  // ignore: unnecessary_getters_setters
   KlarnaPaymentControllerState get currentState => _currentState;
 
   Stream<KlarnaPaymentControllerState> get stateStream =>
