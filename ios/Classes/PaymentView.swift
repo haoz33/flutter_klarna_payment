@@ -74,7 +74,7 @@ class FLNativeView: NSObject, FlutterPlatformView,KlarnaPaymentEventListener {
     func createNativeView(view _view: UIView, request:KlarnaPayRequest){
         streamHandler.sendMessage(state: PaymentState.initial.rawValue, message: nil);
 
-        _paymentView = KlarnaPaymentView(category: "pay_over_time", eventListener: self)
+        _paymentView = KlarnaPaymentView(category: "klarna", eventListener: self)
         // Create a height constraint that we'll update as its height changes.
         _paymentView!.initialize(clientToken: request.clientToken, returnUrl:URL.init(string: request.returnUrl)!)
 
