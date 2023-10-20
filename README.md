@@ -10,7 +10,7 @@ To use this plugin, follow these steps:
 
    ```yaml
    dependencies:
-     flutter_klarna_payment: ^0.1.1
+     flutter_klarna_payment: ^0.1.3
    ```
 
 2. Run `flutter pub get` to install the dependency.

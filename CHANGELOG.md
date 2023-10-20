@@ -1,3 +1,7 @@
+## 0.1.3
+
+bugfix(android) - fixed issue where auth state is returned even if user closed the dialog without make payment
+
 ## 0.1.2
 
 Changed payment view type to `klarna` in iOS
