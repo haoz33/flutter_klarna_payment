@@ -11,9 +11,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 
-class PaymentView(context: Context, messenger: BinaryMessenger, id: Int, creationParams: Map<String?, Any?>?,private val paymentViewCallback: KlarnaPaymentViewCallback): PlatformView {
-
-    private  val context: Context =context
+class PaymentView( private val context: Context, messenger: BinaryMessenger, id: Int, creationParams: Map<String?, Any?>?,private val paymentViewCallback: KlarnaPaymentViewCallback): PlatformView {
     private val paymentView: KlarnaPaymentView
 
 
@@ -37,22 +35,9 @@ class PaymentView(context: Context, messenger: BinaryMessenger, id: Int, creatio
             returnURL = klarnaRequest.returnUrl
         )
 
-        paymentView.registerPaymentViewCallback(paymentViewCallback)
-
         paymentView.loggingLevel = KlarnaLoggingLevel.Error
 
         paymentView.initialize(klarnaRequest.clientToken,klarnaRequest.returnUrl)
-
     }
-
-
-
-    fun pay(){
-        paymentView.authorize(false,null)
-    }
-
-
-
-
 
 }
